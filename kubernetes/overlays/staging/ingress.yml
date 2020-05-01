@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cheung-may1
+  annotations:
+    # nginx ingress
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # cert-manager
+    ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: clusterissuer-letsencrypt-production
+    # external-dns
+    external-dns.alpha.kubernetes.io/hostname: cheung-may1-api.commitzero.com
+
+spec:
+  rules:
+  - host: cheung-may1-api.commitzero.com
+    http:
+      paths:
+        - path: /(.*)
+          backend:
+            serviceName: cheung-may1
+            servicePort: http
+  tls:
+  - hosts:
+    - cheung-may1-api.commitzero.com
+    secretName: cheung-may1-tls-secret
